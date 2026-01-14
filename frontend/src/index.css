@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: #0a0c12;        /* hsl(224 71% 4%) */
+  --color-foreground: #e3e5f2;        /* hsl(213 31% 91%) */
+  --color-card: #0a0c12;              /* hsl(224 71% 4%) */
+  --color-card-foreground: #e3e5f2;   /* hsl(213 31% 91%) */
+  --color-popover: #0a0c12;           /* hsl(224 71% 4%) */
+  --color-popover-foreground: #e3e5f2;/* hsl(213 31% 91%) */
+  --color-primary: #f0f5fc;           /* hsl(210 40% 98%) */
+  --color-primary-foreground: #1c2030;/* hsl(222.2 47.4% 11.2%) */
+  --color-secondary: #2b2f37;         /* hsl(217.2 32.6% 17.5%) */
+  --color-secondary-foreground: #f0f5fc; /* hsl(210 40% 98%) */
+  --color-muted: #2b2f37;             /* hsl(217.2 32.6% 17.5%) */
+  --color-muted-foreground: #a1a4b2;  /* hsl(215 20.2% 65.1%) */
+  --color-accent: #2b2f37;            /* hsl(217.2 32.6% 17.5%) */
+  --color-accent-foreground: #f0f5fc; /* hsl(210 40% 98%) */
+  --color-destructive: #b33b3b;       /* hsl(0 62.8% 30.6%) */
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-black/40 backdrop-blur-md border border-white/10;
+  }
+}
+
+@layer base {
+  * {
+    border-color: #2b2f37; /* replaced HSL */
+  }
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+  }
+}
