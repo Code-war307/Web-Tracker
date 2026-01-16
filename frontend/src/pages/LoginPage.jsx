@@ -2,72 +2,21 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { loginSchema } from "../schemas/login.schema";
 import {
   User,
   Lock,
-  Eye,
-  EyeOff,
   Github,
   Loader2,
   ShieldCheck,
 } from "lucide-react";
-import { Link } from "react-router-dom";
-
-// Zod validation schema
-const loginSchema = z.object({
-  username: z.string().min(3, "Username must be at least 3 characters"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
-  rememberMe: z.boolean().optional(),
-});
-
-// InputField remains visually same but now works with RHF
-const InputField = ({
-  label,
-  type,
-  placeholder,
-  register,
-  error,
-  icon: Icon,
-}) => {
-  const [showPassword, setShowPassword] = useState(false);
-  const isPassword = type === "password";
-
-  return (
-    <div className="space-y-1.5">
-      <label className="text-[10px] uppercase tracking-[0.2em] text-slate-500 font-bold ml-1">
-        {label}
-      </label>
-      <div className="relative group">
-        <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-emerald-400 transition-colors">
-          <Icon size={18} />
-        </div>
-        <input
-          type={isPassword && showPassword ? "text" : type}
-          placeholder={placeholder}
-          {...register}
-          className={`w-full bg-[#0d111a] border ${
-            error ? "border-rose-500/50" : "border-[#2b2f37]"
-          } 
-                     text-[#e3e5f2] pl-12 pr-12 py-3 rounded-xl outline-none transition-all text-sm
-                     focus:border-[#f0f5fc]/40 focus:ring-4 focus:ring-[#f0f5fc]/5 placeholder:text-slate-600`}
-        />
-        {isPassword && (
-          <button
-            type="button"
-            onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white transition-colors">
-            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-          </button>
-        )}
-      </div>
-      {error && <p className="text-rose-500 text-xs mt-1">{error.message}</p>}
-    </div>
-  );
-};
+import { Link, useNavigate } from "react-router-dom";
+import InputField from "../components/InputFeild";
+import { axiosInstance } from "../services/apiClient";
 
 export const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const {
     register,
@@ -79,11 +28,21 @@ export const LoginPage = () => {
     defaultValues: { username: "", password: "", rememberMe: false },
   });
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     setIsLoading(true);
-    setTimeout(() => {
-      window.location.href = "/dashboard";
-    }, 2000);
+    try {
+      const response = await axiosInstance.post("auth/login", data);
+      navigate("/dashboard"); // Redirect to dashboard or home
+    } catch (error) {
+      const message =
+        error.response?.data?.message ||
+        error.message ||
+        "Something went wrong";
+      console.error("Login failed:", message);
+      alert(message);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

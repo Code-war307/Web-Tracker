@@ -3,7 +3,7 @@ import Sidebar from './Sidebar';
 import TopBar from './TopBar';
 import { Outlet } from 'react-router-dom';
 
-const DashboardLayout = ({ children, onAddWebsite }) => {
+const DashboardLayout = ({ onAddWebsite }) => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     return (
